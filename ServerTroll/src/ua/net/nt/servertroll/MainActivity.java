@@ -28,11 +28,8 @@ public class MainActivity extends Activity {
 		    for (int i = 0; i < values.length; ++i) {
 		      list.add(values[i]);
 		    }
-		    for (int i = values.length; i < 57687; ++i) {
-			      list.add("dfdfsdf");
-			    }
 		    final StableArrayAdapter adapter = new StableArrayAdapter(this,
-		        android.R.layout.simple_list_item_1, list);
+		        R.layout.my_list_item, list);
 		    listview.setAdapter(adapter);
 	}
 
