@@ -7,9 +7,11 @@ import java.util.List;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.ContextWrapper;
 import android.view.Menu;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -24,44 +26,26 @@ public class MainActivity extends Activity {
 		        "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
 		        "Android", "iPhone", "WindowsMobile" };
 
-		    final ArrayList<String> list = new ArrayList<String>();
-		    for (int i = 0; i < values.length; ++i) {
-		      list.add(values[i]);
-		    }
 		    final StableArrayAdapter adapter = new StableArrayAdapter(this,
-		        R.layout.my_list_item, list);
+		        R.layout.my_list_item);
 		    listview.setAdapter(adapter);
+
+		    new sshexec().execute(adapter);
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		ContextWrapper c = new ContextWrapper(this);
+		Toast.makeText(this, getFilesDir().getPath(), Toast.LENGTH_LONG).show();
 		return true;
 	}
 
 	private class StableArrayAdapter extends ArrayAdapter<String> {
 
-	    HashMap<String, Integer> mIdMap = new HashMap<String, Integer>();
-
-	    public StableArrayAdapter(Context context, int textViewResourceId,
-	        List<String> objects) {
-	      super(context, textViewResourceId, objects);
-	      for (int i = 0; i < objects.size(); ++i) {
-	        mIdMap.put(objects.get(i), i);
-	      }
+	    public StableArrayAdapter(Context context, int textViewResourceId) {
+	      super(context, textViewResourceId);
 	    }
-
-	    @Override
-	    public long getItemId(int position) {
-	      String item = getItem(position);
-	      return mIdMap.get(item);
-	    }
-
-	    @Override
-	    public boolean hasStableIds() {
-	      return true;
-	    }
-
 	  }
 }
