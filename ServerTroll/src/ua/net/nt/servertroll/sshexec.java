@@ -13,24 +13,21 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sshexec extends AsyncTaskLoader<List<String>>{
+public class sshexec extends AsyncTaskLoader<List<String>> {
 
-	String homeDir;
+	final String homeDir = getContext().getFilesDir().getPath();
 
-    public sshexec(Context context) {
-        super(context);
-		homeDir = getContext().getFilesDir().getPath();
-    }
+	public sshexec(Context context) {
+		super(context);
+	}
 
-	
-    public List<String> loadInBackground() {
+	public List<String> loadInBackground() {
 
-
-        List<String> list = new ArrayList<String>();
+		final List<String> list = new ArrayList<String>();
 
 		try {
-//			Socket s = new Socket("glv-deb7",2222);
-//			Socket s = new Socket("mail",22);
+			// Socket s = new Socket("glv-deb7",2222);
+			// Socket s = new Socket("mail",22);
 
 			JSch jsch = new JSch();
 			JSch.setConfig("StrictHostKeyChecking", "no");
@@ -40,9 +37,8 @@ public class sshexec extends AsyncTaskLoader<List<String>>{
 
 			Session session = jsch.getSession(user, host);
 
-
 			jsch.setKnownHosts(homeDir + "/.ssh/known_hosts");
-			//jsch.addIdentity(homeDir + "/.ssh/id_rsa");
+			// jsch.addIdentity(homeDir + "/.ssh/id_rsa");
 
 			// If two machines have SSH passwordless logins setup, the following
 			// line is not needed:
@@ -56,7 +52,7 @@ public class sshexec extends AsyncTaskLoader<List<String>>{
 			((ChannelExec) channel).setCommand(command);
 
 			// channel.setInputStream(System.in);
-			//ByteArrayInputStream in = new ByteArrayInputStream();
+			// ByteArrayInputStream in = new ByteArrayInputStream();
 			channel.setInputStream(null);
 
 			((ChannelExec) channel).setErrStream(null);
@@ -73,14 +69,15 @@ public class sshexec extends AsyncTaskLoader<List<String>>{
 			channel.disconnect();
 			session.disconnect();
 		} catch (Exception e) {
-            Log.e("sshexec", "Error", e);
+			Log.e("sshexec", "Error", e);
 
 			String err = e.toString();
-//			Toast.makeText(adapter.getContext(), e.toString(), Toast.LENGTH_LONG).show();
+			// Toast.makeText(adapter.getContext(), e.toString(),
+			// Toast.LENGTH_LONG).show();
 			String aaa = "aaa";
 			// System.out.println(e);
 		}
-		return null;
-		
+		return list;
+
 	} // end main
 } // end class
