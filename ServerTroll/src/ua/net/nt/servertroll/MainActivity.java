@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 		        R.layout.my_list_item);
 		    listview.setAdapter(adapter);
 
-		    new sshexec().execute(adapter);
+		    new sshexec(adapter).execute();
 	}
 
 	@Override
