@@ -68,6 +68,7 @@ public class sshexec extends AsyncTaskLoader<List<String>> {
 
 			channel.disconnect();
 			session.disconnect();
+//			onContentChanged();
 		} catch (Exception e) {
 			Log.e("sshexec", "Error", e);
 
@@ -80,4 +81,54 @@ public class sshexec extends AsyncTaskLoader<List<String>> {
 		return list;
 
 	} // end main
+	@Override
+	  public void deliverResult(List<String> data) {
+	    if (isReset()) {
+	      // The Loader has been reset; ignore the result and invalidate the data.
+	      //releaseResources(data);
+	      return;
+	    }
+
+	    // Hold a reference to the old data so it doesn't get garbage collected.
+	    // We must protect it until the new data has been delivered.
+	    //List<String> oldData = mData;
+	    //mData = data;
+
+	    if (isStarted()) {
+	      // If the Loader is in a started state, deliver the results to the
+	      // client. The superclass method does this for us.
+	      super.deliverResult(data);
+	      onContentChanged();
+	    }
+
+	    // Invalidate the old data as we don't need it any more.
+//	    if (oldData != null && oldData != data) {
+//	      releaseResources(oldData);
+//	    }
+	  }
+
+	  @Override
+	  protected void onStartLoading() {
+	      forceLoad();
+	      return;
+/*	    if (mData != null) {
+	      // Deliver any previously loaded data immediately.
+	      deliverResult(mData);
+	    }
+
+	    // Begin monitoring the underlying data source.
+	    if (mObserver == null) {
+	      mObserver = new SampleObserver();
+	      // TODO: register the observer
+	    }
+*/
+//	    if (takeContentChanged() /*|| mData == null*/) {
+	      // When the observer detects a change, it should call onContentChanged()
+	      // on the Loader, which will cause the next call to takeContentChanged()
+	      // to return true. If this is ever the case (or if the current data is
+	      // null), we force a new load.
+//	      forceLoad();
+//	    }
+	  }
+
 } // end class

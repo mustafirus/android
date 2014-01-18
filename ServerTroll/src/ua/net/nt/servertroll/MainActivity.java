@@ -32,9 +32,11 @@ public class MainActivity extends Activity implements
 
 		listview = (ListView) findViewById(R.id.listView1);
 		adapter = new MyArrayAdapter(this, R.layout.my_list_item);
+		adapter.add("FuckYou");
 
 		listview.setAdapter(adapter);
-
+		//setListAdapter(adapter);
+		LoaderManager.enableDebugLogging (true);
 		getLoaderManager().initLoader(0, null, this);
 
 	}
@@ -43,7 +45,7 @@ public class MainActivity extends Activity implements
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		ContextWrapper c = new ContextWrapper(this);
+		//ContextWrapper c = new ContextWrapper(this);
 		Toast.makeText(this, getFilesDir().getPath(), Toast.LENGTH_LONG).show();
 		return true;
 	}
