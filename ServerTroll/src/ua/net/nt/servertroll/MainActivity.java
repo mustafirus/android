@@ -19,27 +19,23 @@ import android.content.Loader;
 
 //import android.support.v4.app.LoaderManager.LoaderCallbacks;
 
-public class MainActivity extends Activity	
-implements LoaderManager.LoaderCallbacks<List<String>> {
+public class MainActivity extends Activity implements
+		LoaderManager.LoaderCallbacks<List<String>> {
+
+	ListView listview;
+	MyArrayAdapter adapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		 final ListView listview = (ListView) findViewById(R.id.listView1);
-		    String[] values = new String[] { "Android1", "iPhone", "WindowsMobile",
-		        "Blackberry", "WebOS", "Ubuntu", "Windows7", "Max OS X",
-		        "Linux", "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux",
-		        "OS/2", "Ubuntu", "Windows7", "Max OS X", "Linux", "OS/2",
-		        "Android", "iPhone", "WindowsMobile" };
 
-		    final MyArrayAdapter adapter = new MyArrayAdapter(this,
-		        R.layout.my_list_item);
-		    
-		    listview.setAdapter(adapter);
-		    
-		    getLoaderManager().initLoader(0, null, this);
+		listview = (ListView) findViewById(R.id.listView1);
+		adapter = new MyArrayAdapter(this, R.layout.my_list_item);
 
+		listview.setAdapter(adapter);
+
+		getLoaderManager().initLoader(0, null, this);
 
 	}
 
@@ -52,16 +48,12 @@ implements LoaderManager.LoaderCallbacks<List<String>> {
 		return true;
 	}
 
-
-
 	private class MyArrayAdapter extends ArrayAdapter<String> {
 
-	    public MyArrayAdapter(Context context, int textViewResourceId) {
-	      super(context, textViewResourceId);
-	    }
-	  }
-
-
+		public MyArrayAdapter(Context context, int textViewResourceId) {
+			super(context, textViewResourceId);
+		}
+	}
 
 	@Override
 	public Loader<List<String>> onCreateLoader(int id, Bundle args) {
@@ -70,16 +62,14 @@ implements LoaderManager.LoaderCallbacks<List<String>> {
 	}
 
 	@Override
-	public void onLoadFinished(Loader<List<String>> arg0, List<String> arg1) {
-		// TODO Auto-generated method stub
-		
+	public void onLoadFinished(Loader<List<String>> loader, List<String> data) {
+		adapter.addAll(data);
 	}
 
 	@Override
 	public void onLoaderReset(Loader<List<String>> arg0) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 }
