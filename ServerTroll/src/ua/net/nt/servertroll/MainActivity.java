@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+	sshexec se;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -30,15 +31,18 @@ public class MainActivity extends Activity {
 		        R.layout.my_list_item);
 		    listview.setAdapter(adapter);
 
-		    new sshexec(adapter).execute();
+		    (se = new sshexec(adapter)).execute();
 	}
 
+	@Override
+	protected void onStop (){
+		se.cancel(true);
+		super.onStop();
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
-		ContextWrapper c = new ContextWrapper(this);
-		Toast.makeText(this, getFilesDir().getPath(), Toast.LENGTH_LONG).show();
 		return true;
 	}
 
