@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 
 import com.jcraft.jsch.*;
@@ -14,9 +15,11 @@ import java.util.List;
 public class sshexec extends AsyncTask<Void, List<String>, Void> {
 
 	ArrayAdapter<String> adapter;
+	ListView listView;
 
-	public sshexec(ArrayAdapter<String> adapter) {
+	public sshexec(ArrayAdapter<String> adapter, ListView listView) {
 		this.adapter = adapter;
+		this.listView = listView;
 	}
 
 	protected Void doInBackground(Void... v) {
@@ -43,7 +46,7 @@ public class sshexec extends AsyncTask<Void, List<String>, Void> {
 //			session.setTimeout(1000);
 //			session.setServerAliveCountMax(0);
 
-			String command = "tail -f -n1000 /var/log/mail.info";
+			String command = "tail -f -n200 /var/log/mail.info";
 			// command=args[1];
 
 			Channel channel = session.openChannel("exec");
@@ -102,5 +105,10 @@ public class sshexec extends AsyncTask<Void, List<String>, Void> {
 		Log.i("sshexec", "About to add " + list.size() + " values");
 		adapter.addAll(list);
 		Log.i("sshexec", "Added " + list.size() + " values");
+		adapter.notifyDataSetChanged();
+   		listView.requestLayout();
+   		listView.getParent().requestLayout();
+		listView.invalidate();
+		//adapter
 	}
 } // end class
