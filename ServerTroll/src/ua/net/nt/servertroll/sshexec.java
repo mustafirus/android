@@ -1,10 +1,12 @@
 package ua.net.nt.servertroll;
 
+
 import android.os.AsyncTask;
 import android.os.SystemClock;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.jcraft.jsch.*;
@@ -12,14 +14,15 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class sshexec extends AsyncTask<Void, List<String>, Void> {
+public class sshexec extends AsyncTask<Void, String, Void> {
+	
+	int lineno = 0;
 
-	ArrayAdapter<String> adapter;
-	ListView listView;
+	TextView textView;
+	String endl = System.getProperty("line.separator");
 
-	public sshexec(ArrayAdapter<String> adapter, ListView listView) {
-		this.adapter = adapter;
-		this.listView = listView;
+	public sshexec(TextView textView) {
+		this.textView = textView;
 	}
 
 	protected Void doInBackground(Void... v) {
@@ -34,7 +37,7 @@ public class sshexec extends AsyncTask<Void, List<String>, Void> {
 
 			Session session = jsch.getSession(user, host);
 
-			String home = adapter.getContext().getFilesDir().getPath();
+			String home = textView.getContext().getFilesDir().getPath();
 
 			jsch.setKnownHosts(home + "/.ssh/known_hosts");
 			// jsch.addIdentity(home + "/.ssh/id_rsa");
@@ -71,13 +74,18 @@ public class sshexec extends AsyncTask<Void, List<String>, Void> {
 					break;
 				}
 				while (br.ready()) {
-					if ((line = br.readLine()) != null)
-						list.add(line);
-					if(list.size() > m)
-						break;
+					if ((line = br.readLine()) != null){
+//						textView.append(line);
+						publishProgress(line);
+						Thread.sleep(1);
+					}
+//						list.add(line);
+//					if(list.size() > m)
+						//break;
 				}
 				m=500;
-				if(list.size() == 0){
+				Thread.sleep(1000);
+/*				if(list.size() == 0){
 					Thread.sleep(1000);
 					continue;
 				}
@@ -85,7 +93,7 @@ public class sshexec extends AsyncTask<Void, List<String>, Void> {
 				publishProgress(list);
 				Thread.sleep(10);
 				list = new ArrayList<String>();
-			}
+*/			}
 
 			channel.disconnect();
 			session.disconnect();
@@ -98,17 +106,20 @@ public class sshexec extends AsyncTask<Void, List<String>, Void> {
 	} // end main
 
 	@Override
-	protected void onProgressUpdate(List<String>... values) {
-		List<String> list = values[0];
+	protected void onProgressUpdate(String... values) {
+//		List<String> list = values[0];
+		String line = values[0];
+		line = lineno++ + line + endl;
+		textView.append(line);
 //		Toast.makeText(adapter.getContext(),
 //				String.valueOf(list.size()), Toast.LENGTH_LONG).show();
-		Log.i("sshexec", "About to add " + list.size() + " values");
-		adapter.addAll(list);
+/*		Log.i("sshexec", "About to add " + list.size() + " values");
+		textView.addAll(list);
 		Log.i("sshexec", "Added " + list.size() + " values");
 		adapter.notifyDataSetChanged();
    		listView.requestLayout();
    		listView.getParent().requestLayout();
 		listView.invalidate();
-		//adapter
+	*/	//adapter
 	}
 } // end class
